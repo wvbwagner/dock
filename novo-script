@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
+header="#!/usr/bin/env bash"
+
 if [[ -n $1 && ! -f $1 ]]; then
 	file=$1
 else
 	read -p "Nome do novo executável: " file
 fi
-echo '#!/usr/bin/env bash' > $file
+echo "$header" > $file
 chmod +x $file
 vi $file
