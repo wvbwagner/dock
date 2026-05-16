@@ -1,12 +1,51 @@
 #!/usr/bin/env bash
 
-header="#!/usr/bin/env bash"
+header="#!/usr/bin/env bash
+
+# ---------------------------------------------------
+# Script        :
+# Descrição     :
+# Versão        : 0.1
+# Autor         : Wagner <wagner.botelho@gmail.com>
+# Data          : $(date +%d/%m/%Y)
+# ---------------------------------------------------
+# Uso:
+# ---------------------------------------------------
+"
 
 if [[ -n $1 && ! -f $1 ]]; then
-	file=$1
+    file=$1
 else
-	read -p "Nome do novo executável: " file
+    read -p "Nome do novo executável: " file
 fi
-echo "$header" > $file
-chmod +x $file
-vi $file
+
+# ---------------------------------------------------
+# Configuração dos diretórios
+# ---------------------------------------------------
+
+# CORREÇÃO 1: Usar $HOME em vez de ~ dentro de aspas
+ORIGEM="$HOME/Templates/git/dock"
+LINK="/srv/scripts"
+
+# ---------------------------------------------------
+# Caminho completo do arquivo real
+# ---------------------------------------------------
+real="$ORIGEM/$file"
+
+# Cria o diretório de origem caso ele não exista
+mkdir -p "$ORIGEM"
+
+# Escreve o header no arquivo real
+echo "$header" > "$real"
+
+# CORREÇÃO 2: Dar permissão no caminho COMPLETO ($real), não só no nome ($file)
+chmod +x "$real"
+
+# ---------------------------------------------------
+# Criação do link simbólico
+# ---------------------------------------------------
+# CORREÇÃO 3: O link precisa apontar para o arquivo dentro do destino final
+ln -sf "$real" "$LINK/$file"
+
+# Abre o arquivo real para edição
+vi "$real"
